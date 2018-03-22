@@ -1,9 +1,7 @@
-const utils = require('../../../src/lib/contract-utils');
-
-const Deal = artifacts.require('./Deal');
-const DealFactory = artifacts.require('./DealFactory');
-const DealToken = artifacts.require('./DealToken');
-
+const utils = require('../node_modules/web3-server-tools/src/lib/contract-utils');
+const Deal = require('../build/contracts/Deal');
+const DealFactory = require('../build/contracts/DealFactory');
+const DealToken = require('../build/contracts/DealToken');
 
 contract('DealFactory', (accounts) => {
   let deal,
@@ -18,12 +16,10 @@ contract('DealFactory', (accounts) => {
       });
 
   const createDeal = (options) => {
-    const {
-      startTime, endTime, rate, wallet,
-    } = options;
-    weiToTokenRate = rate;
+    const { startTime, endTime, rate: weiToTokenRate, wallet } = options;
+
     return dealFactory
-      .createDeal(startTime, endTime, rate, wallet)
+      .createDeal(startTime, endTime, weiToTokenRate, wallet)
       .then(tx => utils.getParamFromTxEvent(tx, 'instance', null, 'DealCreated'))
       .then(address => Deal.at(address))
       .then((instance) => {
@@ -31,16 +27,13 @@ contract('DealFactory', (accounts) => {
       });
   };
 
+  beforeEach(() => getInstance().then(() => createDeal(utils.getDealParameters(accounts[5]))));
 
-  beforeEach(() => getInstance()
-    .then(() => createDeal(utils.getDealParameters(accounts[5]))));
-
-  const getTokenContract = _deal =>
-    _deal
-      .token()
-      .then(address => DealToken.at(address));
+  const getTokenContract = _deal => _deal.token().then(address => DealToken.at(address));
 
   it('should get instance of deal factory', () => {
+    console.log("***********");
+    console.log(JSON.stringify(dealFactory));
     assert.ok(dealFactory);
   });
 
@@ -58,7 +51,9 @@ contract('DealFactory', (accounts) => {
       .then(() => deal.authorize(investor))
       .then(() => deal
         .sendTransaction({
-          value: weiInvested, from: investor, to: deal,
+          value: weiInvested,
+          from: investor,
+          to: deal
         }))
       .then(() => getTokenContract(deal))
       .then(token => token.balanceOf(investor))
@@ -70,7 +65,9 @@ contract('DealFactory', (accounts) => {
     const ethAmount = 3;
     return deal
       .sendTransaction({
-        value: ethAmount, from: investor, to: deal,
+        value: ethAmount,
+        from: investor,
+        to: deal
       })
       .then(() => assert.fail('transaction succeeded', 'transfer should have failed'))
       .catch((e) => {
@@ -81,4 +78,3 @@ contract('DealFactory', (accounts) => {
       .then(balance => assert.equal(0, balance.toNumber()));
   });
 });
-

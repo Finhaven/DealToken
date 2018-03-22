@@ -1,5 +1,6 @@
 yarn.lock
 .idea/
+/build
 
 # Created by https://www.gitignore.io/api/node,linux,macos,windows
 
@@ -129,5 +130,3 @@ $RECYCLE.BIN/
 
 
 # End of https://www.gitignore.io/api/node,linux,macos,windows
-
-

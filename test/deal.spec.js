@@ -1,22 +1,18 @@
-const web3 = require('web3'),
-  Deal = artifacts.require('./Deal'),
-  DealToken = artifacts.require('./DealToken'),
-  utils = require('../../../src/lib/contract-utils');
-
+const web3 = require('web3');
+const Deal = require('../build/contracts/Deal');
+const DealToken = require('../build/contracts/DealToken');
+const utils = require('../node_modules/web3-server-tools/src/lib/contract-utils');
 
 contract('Deal', (accounts) => {
-  let deal,
-    dealToken,
-    weiToTokenRate;
+  let deal;
+  let dealToken;
+  let weiToTokenRate;
+
   const createDeal = () => {
     const dealOptions = utils.getDealParameters(accounts[5]);
-    const {
-      startTime, endTime, rate, wallet,
-    } = dealOptions;
-    weiToTokenRate = rate;
-    return Deal.new(startTime, endTime, rate, wallet);
+    const { startTime, endTime, rate: weiToTokenRate, wallet } = dealOptions;
+    return Deal.new(startTime, endTime, weiToTokenRate, wallet);
   };
-
 
   beforeEach(() => createDeal()
     .then((s) => { deal = s; })
@@ -31,18 +27,20 @@ contract('Deal', (accounts) => {
     assert.isNotNull(deal);
   });
 
-  it('should get token from deal', () => Promise.resolve(deal.token())
-    .then(async (token) => {
-      console.log('token address', token);
-      dealToken = await DealToken.at(token);
-      // console.log('dealToken', dealToken);
-      return dealToken.balanceOf.call(accounts[0], { from: accounts[0] });
-    })
-    .then((balance) => {
-      console.log('balance of token', balance.toNumber());
-      assert.equal(0, balance.toNumber());
-    }));
-
+  it('should get token from deal', async () =>
+     Promise
+       .resolve(deal.token())
+       .then(async (token) => {
+         console.log('token address', token);
+         dealToken = await DealToken.at(token);
+         // console.log('dealToken', dealToken);
+         return dealToken.balanceOf.call(accounts[0], { from: accounts[0] });
+       })
+       .then((balance) => {
+         console.log('balance of token', balance.toNumber());
+         assert.equal(0, balance.toNumber());
+       })
+    );
 
   it('should allow investment in deal', () => {
     const account = accounts[0];
@@ -69,9 +67,8 @@ contract('Deal', (accounts) => {
         // console.log('send result', sendResult);
         dealToken.balanceOf(accounts[0], { from: accounts[0] }))
       .then((balance) => {
-        // console.log('balance of token after', balance.toNumber());
+        console.log('balance of token after', balance.toNumber());
         assert.equal(weiToTokenRate * weiAmount, balance.toNumber());
       });
   });
 });
-

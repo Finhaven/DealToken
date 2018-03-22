@@ -13,7 +13,7 @@ We are using the [Truffle Framework](http://truffleframework.com/) / toolchain.
 ## Testing
 
 ```shell
-> truffle test
+> npm run test
 ```
 
 ## Compiling

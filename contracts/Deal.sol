@@ -1,7 +1,7 @@
 pragma solidity ^0.4.15;
 
 
-import '../../node_modules/zeppelin-solidity/contracts/crowdsale/Crowdsale.sol';
+import '../node_modules/zeppelin-solidity/contracts/crowdsale/Crowdsale.sol';
 import './TxOwnable.sol';
 import './DealToken.sol';
 

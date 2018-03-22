@@ -1,8 +1,8 @@
 pragma solidity ^0.4.15;
 
 
-import '../../node_modules/zeppelin-solidity/contracts/token/MintableToken.sol';
-import '../../node_modules/zeppelin-solidity/contracts/token/LimitedTransferToken.sol';
+import '../node_modules/zeppelin-solidity/contracts/token/MintableToken.sol';
+import '../node_modules/zeppelin-solidity/contracts/token/LimitedTransferToken.sol';
 
 
 contract RegulatedToken is MintableToken, LimitedTransferToken {

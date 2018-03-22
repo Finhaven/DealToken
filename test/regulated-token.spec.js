@@ -1,4 +1,8 @@
-const RegulatedToken = artifacts.require('./RegulatedToken.sol');
+const ganache = require('ganache-cli');
+const Web3 = require('web3');
+const chai = require('chai');
+const assert = chai.assert;
+const RegulatedToken = require('../build/contracts/RegulatedToken');
 
 contract('RegulatedToken', () => {
   let regulatedToken;
@@ -40,4 +44,3 @@ contract('RegulatedToken', () => {
     // });
   });
 });
-
