@@ -2,12 +2,12 @@ const chai = require('chai');
 const assert = chai.assert;
 
 const web3 = require('web3');
-const accounts = require('./accounts');
-const Deal = require('../build/contracts/Deal').Deal;
-const DealToken = require('../build/contracts/DealToken').DealToken;
+const { accounts } = require('./accounts');
+const Deal = artifacts.require('./Deal');
+const DealToken = artifacts.require('./DealToken');
 const utils = require('../node_modules/web3-server-tools/src/lib/contract-utils');
 
-describe('Deal', (accounts) => {
+contract('Deal', (accounts) => {
   let deal;
   let dealToken;
   let weiToTokenRate;
