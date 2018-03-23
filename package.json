@@ -24,7 +24,7 @@
     "watch": "npm-watch"
   },
   "watch": {
-    "test": "src/*,test/*",
+    "test": "contracts/*,test/*",
     "test:truffle": {
       "patterns": [
         "truffle"
