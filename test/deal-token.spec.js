@@ -85,3 +85,4 @@ contract('DealToken', (accounts) => {
       .then(checkBalance(accounts[2], 0));
   });
 });
+
