@@ -5,8 +5,7 @@
     "type": "git",
     "url": "git+https://github.com/Finhaven/DealToken.git"
   },
-  "author": "",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "private": true,
   "main": "src/lib/eth.js",
   "files": [
