@@ -1,6 +1,7 @@
 # Finhaven Smart Contracts
 
 [![CircleCI](https://circleci.com/gh/Finhaven/DealToken/tree/master.svg?style=svg)](https://circleci.com/gh/Finhaven/DealToken/tree/master)
+[![Maintainability](https://api.codeclimate.com/v1/badges/5e696ad902abc5e35858/maintainability)](https://codeclimate.com/github/Finhaven/DealToken/maintainability)
 
 Finhaven tokens and other [Ethereum](https://ethereum.org) smart contracts
 
