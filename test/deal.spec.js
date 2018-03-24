@@ -58,10 +58,11 @@ contract('Deal', () => { // eslint-disable-line no-undef
       .then(([startTime, endTime]) => {
         const now = Math.ceil(Date.now() / 1000);
 
-        let elapsed = (now) - startTime.toNumber();
-        let left = endTime.toNumber() - (now);
-        console.log(`>>>>>>>> elapsed=${elapsed} left=${left} - contract start time ${startTime.toNumber()} ${endTime.toNumber()}`);
-        console.log(now);
+        // console.log(`Now: ${now}`);
+        // console.log(`Elapsed: ${now - startTime.toNumber()}`);
+        // console.log(`Left: ${endTime.toNumber() - now}`);
+        // console.log(`Contract start: ${startTime.toNumber()}`);
+        // console.log(`Contract end: ${endTime.toNumber()}`);
 
         assert.isAtLeast(now, startTime.toNumber(), 'deal has started');
         assert.isAtMost(now, endTime.toNumber(), 'deal has not finished');
