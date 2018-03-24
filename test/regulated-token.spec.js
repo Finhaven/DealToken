@@ -1,6 +1,8 @@
-const RegulatedToken = artifacts.require('./RegulatedToken.sol');
+const { assert } = require('chai');
 
-contract('RegulatedToken', () => {
+const RegulatedToken = artifacts.require('./RegulatedToken.sol'); // eslint-disable-line no-undef
+
+contract('RegulatedToken', () => { // eslint-disable-line no-undef
   let regulatedToken;
 
   beforeEach(async () => {
@@ -40,4 +42,3 @@ contract('RegulatedToken', () => {
     // });
   });
 });
-

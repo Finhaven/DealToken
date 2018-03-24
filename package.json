@@ -1,6 +1,7 @@
 {
   "name": "deal-token",
   "version": "0.1.0",
+  "description": "Regulatable Ethereum deal token smart contracts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Finhaven/DealToken.git"
@@ -15,9 +16,9 @@
   "scripts": {
     "postinstall": "echo \"\n\n\n\ncontracts included in this project require compilation on a fresh checkout: npm run truffle:compile\n\n\n\n\"",
     "pretest": "./ensure-ganache-running.sh || (npm run start:testrpc &)",
+    "test": "truffle test",
     "test:lint": "eslint -c .eslintrc . --color=true --quiet",
     "test:lint:fix": "eslint -c .eslintrc . --color=true --quiet --fix",
-    "test": "truffle test",
     "truffle:compile": "truffle compile",
     "start:testrpc": "ganache-cli -u 0 -s frontier-seed",
     "watch": "npm-watch"
@@ -45,8 +46,8 @@
     "npm-watch": "^0.3.0",
     "solhint": "^1.1.10",
     "solidity-coverage": "^0.4.14",
-    "truffle": "^4.1.13",
-    "zeppelin-solidity": "1.7.0"
+    "truffle": "^4.1.3",
+    "zeppelin-solidity": "1.3.0"
   },
   "engines": {
     "node": "8.4"
