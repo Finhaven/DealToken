@@ -1,25 +1,29 @@
-const web3 = require('web3'),
-  Deal = artifacts.require('./Deal'),
-      DealToken = artifacts.require('./DealToken');
+const { assert } = require('chai');
+const web3 = require('web3');
 
 const utils = require('../node_modules/web3-server-tools/src/lib/contract-utils');
 const { accounts } = require('./accounts');
 
-contract('Deal', (accounts) => {
-  let deal,
-    dealToken,
-    weiToTokenRate;
+const Deal = artifacts.require('./Deal'); // eslint-disable-line no-undef
+const DealToken = artifacts.require('./DealToken'); // eslint-disable-line no-undef
+
+contract('Deal', () => { // eslint-disable-line no-undef
+  let deal;
+  let dealToken;
+  let weiToTokenRate;
+
   const createDeal = () => {
     const dealOptions = utils.getDealParameters(accounts[5]);
     const {
-      startTime, endTime, rate, wallet,
+      startTime,
+      endTime,
+      rate,
+      wallet,
     } = dealOptions;
-    weiToTokenRate = rate;
-    const foo = Deal.new(startTime, endTime, rate, wallet);
-    console.log(JSON.stringify(foo));
-    return foo;
-  };
 
+    weiToTokenRate = rate;
+    return Deal.new(startTime, endTime, rate, wallet);
+  };
 
   beforeEach(() => createDeal()
     .then((s) => { deal = s; })
@@ -46,7 +50,6 @@ contract('Deal', (accounts) => {
       assert.equal(0, balance.toNumber());
     }));
 
-
   it('should allow investment in deal', () => {
     const account = accounts[0];
     const weiAmount = web3.utils.toWei('1', 'ether');
@@ -55,12 +58,14 @@ contract('Deal', (accounts) => {
       .then(([startTime, endTime]) => {
         const now = Math.ceil(Date.now() / 1000);
 
-        // console.log(`elapsed=${elapsed} left=${left} - contract start time ${startTime.toNumber()} ${endTime.toNumber()}`);
-        // let elapsed = (now) - startTime.toNumber();
-        // let left = endTime.toNumber() - (now);
-        //
-        assert.isAtLeast(now, startTime, 'deal has started');
-        assert.isAtMost(now, endTime, 'deal has not finished');
+        // console.log(`Now: ${now}`);
+        // console.log(`Elapsed: ${now - startTime.toNumber()}`);
+        // console.log(`Left: ${endTime.toNumber() - now}`);
+        // console.log(`Contract start: ${startTime.toNumber()}`);
+        // console.log(`Contract end: ${endTime.toNumber()}`);
+
+        assert.isAtLeast(now, startTime.toNumber(), 'deal has started');
+        assert.isAtMost(now, endTime.toNumber(), 'deal has not finished');
       })
       .then(deal.authorize(account))
       .then(() => {

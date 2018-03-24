@@ -1,4 +1,4 @@
-const DealFactory = artifacts.require('./DealFactory.sol');
+const DealFactory = artifacts.require('./DealFactory.sol'); // eslint-disable-line no-undef
 
 module.exports = (deployer) => {
   // let gasLimit = web3.eth.getBlock('pending').gasLimit;

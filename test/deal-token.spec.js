@@ -1,4 +1,6 @@
-const DealToken = artifacts.require('./DealToken.sol');
+const { assert } = require('chai');
+
+const DealToken = artifacts.require('./DealToken.sol'); // eslint-disable-line no-undef
 
 let dealToken;
 
@@ -41,8 +43,7 @@ const transfer = (from, to, amount, shouldFail) =>
       }
     });
 
-
-contract('DealToken', (accounts) => {
+contract('DealToken', (accounts) => { // eslint-disable-line no-undef
   const account = accounts[0];
 
   beforeEach(async () => {
@@ -85,4 +86,3 @@ contract('DealToken', (accounts) => {
       .then(checkBalance(accounts[2], 0));
   });
 });
-

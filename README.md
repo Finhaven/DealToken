@@ -1,22 +1,24 @@
 # Finhaven Smart Contracts
 
+[![CircleCI](https://circleci.com/gh/Finhaven/DealToken/tree/master.svg?style=svg)](https://circleci.com/gh/Finhaven/DealToken/tree/master)
+
 Finhaven tokens and other [Ethereum](https://ethereum.org) smart contracts
 
-We are using the [Truffle Framework](http://truffleframework.com/) / toolchain.
+We are using the [Truffle Framework](http://truffleframework.com/)
 
-## Installation
+## Install
 
 ```shell
 > npm install
 ```
 
-## Testing
+## Test
 
 ```shell
 > npm run test
 ```
 
-## Compiling
+## Compile
 
 However, if you change smart contracts, you will need to recompile them. You can do this with
 

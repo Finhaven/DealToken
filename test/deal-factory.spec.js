@@ -1,14 +1,16 @@
+const { assert } = require('chai');
 const utils = require('../node_modules/web3-server-tools/src/lib/contract-utils');
 
+/* eslint-disable no-undef */
 const Deal = artifacts.require('./Deal');
 const DealFactory = artifacts.require('./DealFactory');
 const DealToken = artifacts.require('./DealToken');
+/* eslint-enable no-undef */
 
-
-contract('DealFactory', (accounts) => {
-  let deal,
-    dealFactory,
-    weiToTokenRate;
+contract('DealFactory', (accounts) => { // eslint-disable-line no-undef
+  let deal;
+  let dealFactory;
+  let weiToTokenRate;
 
   const getInstance = () =>
     DealFactory
@@ -19,8 +21,12 @@ contract('DealFactory', (accounts) => {
 
   const createDeal = (options) => {
     const {
-      startTime, endTime, rate, wallet,
+      startTime,
+      endTime,
+      rate,
+      wallet,
     } = options;
+
     weiToTokenRate = rate;
     return dealFactory
       .createDeal(startTime, endTime, rate, wallet)
