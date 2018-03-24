@@ -1,12 +1,12 @@
 {
   "env": {
-    "node": true,
     "mocha": true,
-    "es6": true
+    "node": true
   },
-  "globals": {
-    "contract": true,
-    "artifacts": true,
-    "assert": true
+  "extends": [
+    "airbnb-base"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 8
   }
 }
