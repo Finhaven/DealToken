@@ -7,12 +7,6 @@
     "url": "git+https://github.com/Finhaven/DealToken.git"
   },
   "license": "Apache-2.0",
-  "private": true,
-  "main": "src/lib/eth.js",
-  "files": [
-    "src",
-    "truffle"
-  ],
   "scripts": {
     "postinstall": "echo \"\n\n\n\ncontracts included in this project require compilation on a fresh checkout: npm run truffle:compile\n\n\n\n\"",
     "pretest": "./ensure-ganache-running.sh || (npm run start:testrpc &)",
