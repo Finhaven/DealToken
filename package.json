@@ -49,6 +49,7 @@
   "dependencies": {
     "ethereumjs-tx": "^1.3.4",
     "solc": "^0.4.21",
+    "validated-token": "github:Finhaven/ValidatedToken#oss",
     "web3": "^1.0.0-beta.33",
     "web3-server-tools": "git+https://github.com/Finhaven/web3-server-tools.git"
   }
