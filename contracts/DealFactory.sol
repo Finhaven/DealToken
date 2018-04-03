@@ -1,8 +1,6 @@
 pragma solidity ^0.4.15;
 
-
 import './Deal.sol';
-
 
 contract DealFactory {
   event DealCreated(address sender, address instance);
