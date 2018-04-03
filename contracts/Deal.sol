@@ -1,4 +1,4 @@
-pragma solidity ^0.4.15;
+pragma solidity ^0.4.19;
 
 import '../node_modules/validated-token/contracts/ReferenceToken.sol';
 import '../node_modules/zeppelin-solidity/contracts/token/ERC20/TokenTimelock.sol';
