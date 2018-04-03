@@ -15,7 +15,7 @@ contract DealFactory {
         uint256 _endTime,
         uint256 _holdPeriod,
         TokenValidator _validator
-    ) public returns (address _deal) {
+    ) public returns (Deal _deal) {
         Deal deal =
           new Deal(_name, _symbol, _granularity, _startTime, _endTime, _holdPeriod, _validator);
 
