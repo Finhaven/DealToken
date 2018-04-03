@@ -38,9 +38,7 @@ contract Deal is ReferenceToken {
 
     /// Releases hold on funds from TokenTimelock. Reverts if the hold time has not elapsed.
     function releaseFor(address _tokenHolder) public { holds[_tokenHolder].release(); }
-    // Not removing from map saves gas.
-    // https://ethereum.stackexchange.com/questions/41576/is-it-cheaper-to-delete-or-ignore-obsolete-mappings
-
+    // Not removing from map saves gas: https://ethereum.stackexchange.com/questions/41576/is-it-cheaper-to-delete-or-ignore-obsolete-mappings
 
     /// Reverts if not in crowdsale time range.
     modifier whileOpen {
