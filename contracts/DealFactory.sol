@@ -5,7 +5,7 @@ import './Deal.sol';
 contract DealFactory {
     event DealCreated(address sender, address instance);
 
-    mapping(address => address[]) public registry;
+    mapping(address => Deal[]) public registry;
 
     function create(
         string _name,
@@ -16,7 +16,7 @@ contract DealFactory {
         uint256 _holdPeriod,
         TokenValidator _validator
     ) public returns (address _deal) {
-        address deal =
+        Deal deal =
           new Deal(_name, _symbol, _granularity, _startTime, _endTime, _holdPeriod, _validator);
 
         registry[msg.sender].push(deal);
@@ -25,5 +25,5 @@ contract DealFactory {
         return deal;
     }
 
-    function mine() public view returns (address[]) { return registry[msg.sender]; }
+    function mine() public view returns (Deal[]) { return registry[msg.sender]; }
 }
