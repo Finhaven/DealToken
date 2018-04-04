@@ -22,18 +22,15 @@ contract Deal is ReferenceToken {
 
       startTime  = _startTime;
       endTime    = _endTime;
-      holdPeriod = _holdPeriod;
     }
+
+    // CUSTOM //
 
     function endNow() public onlyOwner {
-        endTime = now;
+      endTime = now;
     }
 
-    function mint(address _tokenHolder, uint256 _amount) public onlyOwner whileOpen {
-        /* TokenTimelock escrow = new TokenTimelock(ERC20Basic(this), _tokenHolder, now.add(holdPeriod)); */
-        holds[_tokenHolder] = escrow;
-        super.mint(escrow, _amount);
-    }
+    // MODIFERS //
 
     /// Reverts if not in crowdsale time range.
     modifier whileOpen {
@@ -41,4 +38,28 @@ contract Deal is ReferenceToken {
         require(now <= endTime);
         _;
     }
+
+    // ERC20 //
+
+    function mint(address _tokenHolder, uint256 _amount) public onlyOwner whileOpen {
+        super.mint(_tokenHolder, _amount)
+    }
+
+    function transfer(address _to, uint256 _amount) public whileOpen returns (bool success) {
+        super.transfer(_to, _amount);
+    }
+
+    function transferFrom(address _from, address _to, uint256 _amount) public whileOpen returns (bool success) {
+        super.transferFrom(_from, _to, _amount);
+    }
+
+    // HELPERS //
+
+    /* function check(address _tokenHolder) internal returns (uint8) { */
+    /*     validator.check(this, _tokenHolder); */
+    /* } */
+
+    /* function check(address _from, address _to, uint256 _amount) internal returns (uint8) { */
+    /*     validator.check(this, _from, _to, _amount); */
+    /* } */
 }
