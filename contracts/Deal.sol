@@ -10,6 +10,15 @@ contract Deal is ReferenceToken {
     uint256 public endTime;
     uint256 public holdPeriod;
 
+
+    // If and when we move to timestamped issuance
+    /* struct Balance { */
+    /*   uint256 mintedAt; */
+    /*   uint256 value; */
+    /* } */
+
+    /* mapping(address => Balance[]) private mBalances; */
+
     function Deal(
         string _name,
         string _symbol,
