@@ -11,7 +11,7 @@ contract Deal is ReferenceToken {
     uint256 public holdPeriod;
 
 
-    // If and when we move to timestamped issuance
+    // If and when we move to timestamped issuance or maybe a RollingDeal?
     /* struct Balance { */
     /*   uint256 mintedAt; */
     /*   uint256 value; */
