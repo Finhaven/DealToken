@@ -1,6 +1,8 @@
 pragma solidity ^0.4.19;
 
 import './Deal.sol';
+import './TimeValidator.sol';
+
 import '../node_modules/validated-token/contracts/TokenValidator.sol';
 import '../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol';
 
@@ -9,24 +11,16 @@ contract DealValidator is Ownable, TokenValidator {
 
     mapping(address => bool) private auths;
 
-    function DealValidator() Ownable public {}
+    TimeValidator private timeValidator;
+
+    function DealValidator(TimeValidator _timeValidator) Ownable public {
+        timeValidator = _timeValidator;
+    }
 
     // CUSTOM //
 
     function setAuth(address _address, bool _status) public onlyOwner {
         authorizations[_address] = _status;
-    }
-
-    function availability(Deal _token) internal pure returns (byte _status) {
-      if(_token.startTime < now) {
-          return hex"43"; // Not yet available
-      }
-
-      if(_token.endTime >= now) {
-          return hex"40"; // Expired
-      }
-
-      return hex"41"; // Available
     }
 
     // TOKEN VALIDATOR //
@@ -35,8 +29,8 @@ contract DealValidator is Ownable, TokenValidator {
         // Reads way better with guards. I can add the tnested logic, if preferred.
         if(!auths[_account]) { return hex"10"; } // Unauthorized
 
-        byte timeState = availability(_deal);
-        if(timeState == hex"41") { return hex"11"; } // Authorized
+        byte timeState = timeValidtor.check(_deal, _account);
+        if(isOk(timeState)) { return hex"11"; } // Authorized
         return timeState; // Pass along time failure code
     }
 
