@@ -10,7 +10,6 @@ contract Deal is ReferenceToken {
     uint256 public endTime;
     uint256 public holdPeriod;
 
-
     // If and when we move to timestamped issuance or maybe a RollingDeal?
     /* struct Balance { */
     /*   uint256 mintedAt; */
@@ -63,14 +62,4 @@ contract Deal is ReferenceToken {
     function transferFrom(address _from, address _to, uint256 _amount) public whileOpen returns (bool success) {
         super.transferFrom(_from, _to, _amount);
     }
-
-    // HELPERS //
-
-    /* function check(address _tokenHolder) internal returns (uint8) { */
-    /*     validator.check(this, _tokenHolder); */
-    /* } */
-
-    /* function check(address _from, address _to, uint256 _amount) internal returns (uint8) { */
-    /*     validator.check(this, _from, _to, _amount); */
-    /* } */
 }
