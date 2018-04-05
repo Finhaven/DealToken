@@ -49,6 +49,6 @@ contract StaggeredDeal is ReferenceToken {
             createdAt: now
         }));
 
-        super.mint(_tokenHolder, _amount)
+        super.mint(_tokenHolder, _amount);
     }
 }
