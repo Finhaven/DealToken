@@ -28,30 +28,4 @@ contract Deal is ReferenceToken {
     function endNow() public onlyOwner {
         endTime = now;
     }
-
-    // Handle in validator
-    /// Reverts if not in crowdsale time range.
-    modifier whileOpen {
-        require(now >= startTime);
-        require(now <= endTime);
-        _;
-    }
-
-    // ERC20 //
-
-    function mint(address _tokenHolder, uint256 _amount) public onlyOwner whileOpen {
-        super.mint(_tokenHolder, _amount);
-    }
-
-    function transfer(address _to, uint256 _amount) public whileOpen returns (bool success) {
-        super.transfer(_to, _amount);
-    }
-
-    function transferFrom(
-        address _from,
-        address _to,
-        uint256 _amount
-    ) public whileOpen returns (bool success) {
-        super.transferFrom(_from, _to, _amount);
-    }
 }

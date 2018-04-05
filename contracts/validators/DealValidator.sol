@@ -32,7 +32,7 @@ contract DealValidator is Ownable, TokenValidator {
         address _to,
         uint256 _amount
     ) public returns (byte _validation) {
-        return (auths[_from] && auths[_to]) ? hex"11" : return hex"10";
+        return (auths[_from] && auths[_to]) ? hex"11" : hex"10";
     }
 
     // HELPERS //

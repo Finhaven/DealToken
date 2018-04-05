@@ -27,8 +27,8 @@ Prehistory |  Mintable  |         Tradeable          | Inactive
  */
 contract StaggeredDeal is ReferenceToken {
     struct Minting {
-      uint256 amount;
-      uint256 createdAt;
+        uint256 amount;
+        uint256 createdAt;
     }
 
     mapping(address => Minting[]) public mintings;

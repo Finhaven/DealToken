@@ -9,8 +9,8 @@ import '../node_modules/validated-token/contracts/TokenValidator.sol';
 
          startTime    endTime    endTime + holdPeriod    dealOver
            -tX         t0                tY                 tZ
-            |----------|-----------------|------------------|
-Prehistory  |   Mint   |        Hold     |     Trade        |
+            |==========|=================|==================|
+Prehistory  |   Mint   |       Hold      |       Trade      |
 
  */
 contract PhaseValidator is TokenValidator {
