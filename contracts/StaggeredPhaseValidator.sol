@@ -24,13 +24,8 @@ Prehistory |  Mintable  |         Tradeable          | Inactive
            |            |                            |
 
  */
-contract StaggeredPhaseValidator is TokenValidator {
+contract StaggeredPhaseValidator is PhaseValidator {
     using SafeMath for uint256;
-
-    // Check if in ready state
-    function check(Deal _deal, address /* _account */) public view returns (byte _status) {
-        return (_deal.startTime < now) ? hex"43" : hex"41";
-    }
 
     // NOTE TO SELF: Add events?
     function check(

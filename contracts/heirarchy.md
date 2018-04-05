@@ -1,19 +1,24 @@
 # Heirarchy
 
-| Symbol        | Meaning       |
-|---------------|---------------|
-| `△`           | Inherits from |
-| `V`, `>`, `<` | Depends on    |
+| Symbol        | Meaning       | Memonic |
+|---------------|---------------|---------|
+| `△`           | Inherits from | "is a"  |
+| `V`, `>`, `<` | Depends on    | "has a" |
 
 ```
+TOKENS         FACTORIES             VALIDATORS
 
+  (EIP-902)
 ReferenceToken
      △
-     |  +---DealFactory----+
-     |  |                  |
-     |  V                  V
-     Deal <--------- DealValidator ----> PhaseValidator
-      △                                       △
-      |                                       |
-StaggeredDeal <------------------ StaggeredPhaseValidator
+     | +----- DealFactory ----> TokenValidator
+     | |                             △    △
+     | |                             |    |
+     | |+------------------ DealValidator |
+     | ||                         |       |
+     | VV                         V       |
+     Deal <-------------------- PhaseValidator
+     △                                    △
+     |                                    |
+StaggeredDeal <------- StaggeredPhaseValidator
 ```
