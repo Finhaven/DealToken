@@ -9,12 +9,6 @@ contract Deal is ReferenceToken {
     uint256 public endTime;
     uint256 public holdPeriod;
 
-    // If and when we move to timestamped issuance or maybe a RollingDeal?
-    /* struct Balance { */
-    /*   uint256 mintedAt; */
-    /*   uint256 value; */
-    /* } */
-
     function Deal(
         string _name,
         string _symbol,
@@ -35,6 +29,7 @@ contract Deal is ReferenceToken {
         endTime = now;
     }
 
+    // Handle in validator
     /// Reverts if not in crowdsale time range.
     modifier whileOpen {
         require(now >= startTime);
@@ -45,7 +40,7 @@ contract Deal is ReferenceToken {
     // ERC20 //
 
     function mint(address _tokenHolder, uint256 _amount) public onlyOwner whileOpen {
-        super.mint(_tokenHolder, _amount)
+        super.mint(_tokenHolder, _amount);
     }
 
     function transfer(address _to, uint256 _amount) public whileOpen returns (bool success) {
