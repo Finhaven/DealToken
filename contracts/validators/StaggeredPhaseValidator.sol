@@ -29,12 +29,12 @@ contract StaggeredPhaseValidator is PhaseValidator {
 
     // NOTE TO SELF: Add events?
     function check(
-        address _deal
+        address _deal,
         address _from,
         address _to,
         uint256 _amount
     ) public view returns (byte _validation) {
-        return (_deal == _from) ? mintable(_deal) : transferrable(_deal, _from, _amount);
+        return (_from == address(0)) ? mintable(_deal) : transferrable(_deal, _from, _amount);
     }
 
     // HELPERS //
@@ -62,7 +62,7 @@ contract StaggeredPhaseValidator is PhaseValidator {
         mintings = _deal.mintings;
 
         for (i = 0; i++; i < mintings.length) {
-            if (records[i].createdAt.add(holdPeriod) < now) {
+            if (now < mintings[i].createdAt.add(holdPeriod)) {
                 total.sub(mintings[i].amount);
             }
         }
