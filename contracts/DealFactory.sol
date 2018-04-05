@@ -4,11 +4,7 @@ import './Deal.sol';
 
 contract DealFactory {
     event DealCreated(address sender, Deal deal);
-
-    // Any point making this private? It's all actually public anyways.
     mapping(address => Deal[]) private registry;
-    // People can change public?
-    // hash this?
 
     function create(
         string _name,

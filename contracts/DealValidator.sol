@@ -1,7 +1,7 @@
 pragma solidity ^0.4.19;
 
 import './Deal.sol';
-import './TimeValidator.sol';
+import './PhaseValidator.sol';
 
 import '../node_modules/validated-token/contracts/TokenValidator.sol';
 import '../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol';
@@ -9,15 +9,12 @@ import '../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol';
 contract DealValidator is Ownable, TokenValidator {
     using SafeMath for uint256;
 
+    PhaseValidator private phaseValidator;
     mapping(address => bool) private auths;
 
-    TimeValidator private timeValidator;
-
-    function DealValidator(TimeValidator _timeValidator) Ownable public {
-        timeValidator = _timeValidator;
+    function DealValidator(PhaseValidator _phaseValidator) Ownable public {
+        phaseValidator = _phaseValidator;
     }
-
-    // CUSTOM //
 
     function setAuth(address _address, bool _status) public onlyOwner {
         authorizations[_address] = _status;
@@ -26,24 +23,22 @@ contract DealValidator is Ownable, TokenValidator {
     // TOKEN VALIDATOR //
 
     function check(Deal _deal, address _account) public returns(byte _status) {
-        // Reads way better with guards. I can add the tnested logic, if preferred.
-        if(!auths[_account]) { return hex"10"; } // Unauthorized
-
-        byte timeState = timeValidtor.check(_deal, _account);
-        if(isOk(timeState)) { return hex"11"; } // Authorized
-        return timeState; // Pass along time failure code
+        return auths[_account] ? phaseCheck(_deal, _account) : hex"10";
     }
 
     function check(
-        address /* _tokem */,
+        address /* _token */,
         address _from,
         address _to,
         uint256 _amount
-    ) public returns (uint8 result) {
-        if(auths[_from] && auths[_to]) {
-          return 1;
-        } else {
-          return 0;
-        }
+    ) public returns (byte _validation) {
+        return (auths[_from] && auths[_to]) ? hex"11" : return hex"10";
+    }
+
+    // HELPERS //
+
+    function phaseCheck(Deal _deal, address _tokenHolder) internal view returns (byte _validation) {
+        byte phaseState = phaseValidator.check(_deal, _account);
+        return isOk(phaseState) ? return hex"11" : phaseState;
     }
 }
