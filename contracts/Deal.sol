@@ -16,8 +16,6 @@ contract Deal is ReferenceToken {
     /*   uint256 value; */
     /* } */
 
-    /* mapping(address => Balance[]) private mBalances; */
-
     function Deal(
         string _name,
         string _symbol,
@@ -34,13 +32,9 @@ contract Deal is ReferenceToken {
       endTime    = _endTime;
     }
 
-    // CUSTOM //
-
     function endNow() public onlyOwner {
         endTime = now;
     }
-
-    // MODIFERS //
 
     /// Reverts if not in crowdsale time range.
     modifier whileOpen {
@@ -59,7 +53,11 @@ contract Deal is ReferenceToken {
         super.transfer(_to, _amount);
     }
 
-    function transferFrom(address _from, address _to, uint256 _amount) public whileOpen returns (bool success) {
+    function transferFrom(
+        address _from,
+        address _to,
+        uint256 _amount
+    ) public whileOpen returns (bool success) {
         super.transferFrom(_from, _to, _amount);
     }
 }

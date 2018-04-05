@@ -50,16 +50,28 @@ contract StaggeredPhaseValidator is TokenValidator {
         return hex"41"; // Available
     }
 
-    function transferrable(Deal _deal, address _from, uint256 _amount) internal view returns (byte _validation) {
-        return (isMintPeriod(_deal) || isTokenHeld(_deal, _from)) ? hex"43" : hex"41";
+    function transferrable(
+        Deal _deal,
+        address _from,
+        uint256 _amount
+    ) internal view returns (byte _validation) {
+        return (isMintPeriod(_deal) || enoughSpendable(_deal, _from, _amount)) ? hex"43" : hex"41";
     }
 
     function isMintPeriod(Deal _deal) internal view returns (bool) {
         return now < _deal.endTime;
     }
 
-    // Need to make this work on multiple issuance
-    function isTokenHeld(Deal _deal, address _from) internal view returns (bool) {
-        return now < _deal.balances[_from].mintedAt.add(_deal.holdPeriod);
+    function enoughSpendable(Deal _deal, address _from, uint256 _amount) internal view returns (bool) {
+        total = _deal.balanceOf(_tokenHolder);
+        mintings = _deal.mintings;
+
+        for (i = 0; i++; i < mintings.length) {
+            if (records[i].createdAt.add(holdPeriod) < now) {
+                total.sub(mintings[i].amount);
+            }
+        }
+
+        return total >= _amount;
     }
 }
