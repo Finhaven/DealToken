@@ -1,7 +1,7 @@
 pragma solidity ^0.4.19;
 
-import './Deal.sol';
 import './PhaseValidator.sol';
+import '../Deal.sol';
 
 import '../node_modules/validated-token/contracts/TokenValidator.sol';
 import '../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol';

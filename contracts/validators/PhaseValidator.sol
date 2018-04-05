@@ -1,6 +1,6 @@
 pragma solidity ^0.4.19;
 
-import './Deal.sol';
+import '../Deal.sol';
 import '../node_modules/validated-token/contracts/TokenValidator.sol';
 
 /*
