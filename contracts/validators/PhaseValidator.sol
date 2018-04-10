@@ -1,7 +1,7 @@
 pragma solidity ^0.4.19;
 
-import '../Deal.sol';
-import '../node_modules/validated-token/contracts/TokenValidator.sol';
+import './TokenValidator.sol';
+import '../../node_modules/zeppelin-solidity/contracts/math/SafeMath.sol';
 
 /*
   Synchronous close validtor
@@ -21,7 +21,7 @@ contract PhaseValidator is TokenValidator {
     }
 
     function check(
-        address _deal
+        Deal _deal,
         address _from,
         address _to,
         uint256 /* _amount */

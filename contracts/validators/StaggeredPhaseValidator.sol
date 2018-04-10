@@ -1,6 +1,7 @@
 pragma solidity ^0.4.19;
 
 import './PhaseValidator.sol';
+/* import '../StaggeredDeal.sol'; */
 
 /** Validators for when there's an staggered close
 
@@ -29,7 +30,7 @@ contract StaggeredPhaseValidator is PhaseValidator {
 
     // NOTE TO SELF: Add events?
     function check(
-        address _deal,
+        Deal _deal,
         address _from,
         address _to,
         uint256 _amount
@@ -58,12 +59,11 @@ contract StaggeredPhaseValidator is PhaseValidator {
     }
 
     function enoughSpendable(Deal _deal, address _from, uint256 _amount) internal view returns (bool) {
-        total = _deal.balanceOf(_tokenHolder);
-        mintings = _deal.mintings;
+        uint256 total = _deal.balanceOf(_from);
 
-        for (i = 0; i++; i < mintings.length) {
-            if (now < mintings[i].createdAt.add(holdPeriod)) {
-                total.sub(mintings[i].amount);
+        for (uint i = 0; i++; i < _deal.mintings.length) {
+            if (now < _deal.mintings[i].createdAt.add(_deal.holdPeriod)) {
+                total.sub(_deal.mintings[i].amount);
             }
         }
 

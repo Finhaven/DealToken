@@ -1,11 +1,40 @@
 pragma solidity ^0.4.19;
 
 import './PhaseValidator.sol';
-import '../Deal.sol';
+import './TokenValidator.sol';
 
-import '../node_modules/validated-token/contracts/TokenValidator.sol';
-import '../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol';
+/* import '../Deal.sol'; */
 
+import '../../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol';
+
+/*
+   Deal          DealValidator        PhaseValidator
+    |                 |                    |
+    |    check/4      |                    |
+    +---------------> |                    |
+    |                 |     check/4        |
+    |                 +------------------> |
+    |                 |                    |
+    |                 |                    |
+    |                 |    startTime/0     |
+    | <------------------------------------+
+    |                 |    12345           |
+    +------------------------------------> |
+    |                 |                    |
+    |                 |                    |
+    |                 |      endTime/0     |
+    | <------------------------------------+
+    |                 |    67890           |
+    +------------------------------------> |
+    |                 |                    |
+    |                 |                    |
+    |                 |       hex"41"      |
+    |                 | <------------------+
+    |      hex"41"    |                    |
+    | <---------------+                    |
+    |                 |                    |
+    |                 |                    |
+ */
 contract DealValidator is Ownable, TokenValidator {
     using SafeMath for uint256;
 
@@ -17,7 +46,7 @@ contract DealValidator is Ownable, TokenValidator {
     }
 
     function setAuth(address _address, bool _status) public onlyOwner {
-        authorizations[_address] = _status;
+        auths[_address] = _status;
     }
 
     // TOKEN VALIDATOR //
@@ -38,7 +67,11 @@ contract DealValidator is Ownable, TokenValidator {
     // HELPERS //
 
     function phaseCheck(Deal _deal, address _tokenHolder) internal view returns (byte _validation) {
-        byte phaseState = phaseValidator.check(_deal, _account);
-        return isOk(phaseState) ? return hex"11" : phaseState;
+        byte phaseState = phaseValidator.check(_deal, _tokenHolder);
+        return isOk(phaseState) ? hex"11" : phaseState;
+    }
+
+    function isOk(byte status) internal view returns (bool) {
+        return (status & hex"0F") == 1;
     }
 }
