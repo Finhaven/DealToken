@@ -51,9 +51,8 @@ contract StaggeredDeal is Deal, Ownable {
         TokenValidator _validator
     ) Deal(_name, _symbol, _granularity, _startTime, _endTime, _holdPeriod, _validator) public {}
 
-    function mint(address _tokenHolder, uint256 _amount) external {
-        this.mint(_tokenHolder, _amount);
-
+    function mint(address _tokenHolder, uint256 _amount) public {
+        super.mint(_tokenHolder, _amount);
         upsertHolder(_tokenHolder);
 
         mintHistory[_tokenHolder].push(Minting({
@@ -71,14 +70,14 @@ contract StaggeredDeal is Deal, Ownable {
     }
 
     function isEnoughSpendable(address _from, uint256 _amount) internal view returns (bool) {
-        return spendableAmount(_from, holdPeriod) >= _amount;
+        return spendableAmount(_from) >= _amount;
     }
 
-    function spendableAmount(address _holder, uint256 _holdPeriod) internal view returns (uint256) {
+    function spendableAmount(address _holder) internal view returns (uint256) {
         uint256 total = 0;
 
         for (uint i = 0; i < mintHistory[_holder].length; i++) {
-            if (now < mintHistory[_holder][i].createdAt.add(_holdPeriod)) {
+            if (now < mintHistory[_holder][i].createdAt.add(holdPeriod)) {
                 total.add(mintHistory[_holder][i].amount);
             }
         }

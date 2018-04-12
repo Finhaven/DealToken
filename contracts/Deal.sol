@@ -28,14 +28,14 @@ contract Deal is ReferenceToken {
         endTime    = _endTime;
     }
 
-    function mint(address _tokenHolder, uint256 _amount) external onlyOwner {
+    function mint(address _tokenHolder, uint256 _amount) public onlyOwner {
         require(isMintPhase());
-        return this.mint(_tokenHolder, _amount);
+        return super.mint(_tokenHolder, _amount);
     }
 
-    function approve(address _spender, uint256 _amount) external returns (bool success) {
+    function approve(address _spender, uint256 _amount) public returns (bool success) {
         require(isTransferPhase());
-        return this.approve(_spender, _amount);
+        return super.approve(_spender, _amount);
     }
 
     // HELPERS //
