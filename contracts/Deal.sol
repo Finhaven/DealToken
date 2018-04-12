@@ -21,6 +21,7 @@ contract Deal is ReferenceToken {
         require(_startTime >= now);
         require(_startTime < _endTime);
 
+        holdPeriod = _holdPeriod;
         startTime  = _startTime;
         endTime    = _endTime;
     }

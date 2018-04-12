@@ -1,6 +1,8 @@
 pragma solidity ^0.4.19;
+pragma experimental ABIEncoderV2;
 
-import './Deal.sol';
+import "./Deal.sol";
+import "./MintHistory.sol";
 
 /** Staggered close
 
@@ -25,17 +27,12 @@ Prehistory |  Mintable  |         Tradeable          | Inactive
 
  */
 contract StaggeredDeal is Deal {
-    struct Minting {
-        uint256 amount;
-        uint256 createdAt;
-    }
-
     // Indexed from 1, blugh
     uint public holderCount;
     mapping(uint => address) private holderIndex;
     mapping(address => uint) private reverseHolderIndex;
 
-    mapping(address => Minting[]) private mMintHistory;
+    mapping(address => MintHistory.Minting[]) private mMintHistory;
 
     /* function StaggeredDeal( */
     /*     string _name, */
@@ -52,14 +49,14 @@ contract StaggeredDeal is Deal {
         recordMinting(_tokenHolder, _amount);
     }
 
-    function mintHistory(address _holder) public returns (Minting[]) {
+    function mintHistory(address _holder) public returns (MintHistory.Minting[]) {
         return mMintHistory[_holder];
     }
 
     function recordMinting(address _tokenHolder, uint256 _amount) internal onlyOwner {
         upsertHolder(_tokenHolder);
 
-        mMintHistory[_tokenHolder].push(Minting({
+        mMintHistory[_tokenHolder].push(MintHistory.Minting({
             amount: _amount,
             createdAt: now
         }));

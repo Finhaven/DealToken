@@ -19,7 +19,7 @@ contract DealFactory {
           new Deal(_name, _symbol, _granularity, _startTime, _endTime, _holdPeriod, _validator);
 
         registry[msg.sender].push(deal);
-        DealCreated(msg.sender, deal);
+        emit DealCreated(msg.sender, deal);
 
         return deal;
     }

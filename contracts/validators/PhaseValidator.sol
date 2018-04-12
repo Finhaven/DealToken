@@ -16,7 +16,7 @@ Prehistory  |   Mint   |       Hold      |       Trade      |
 contract PhaseValidator is TokenValidator {
     using SafeMath for uint256;
 
-    function check(Deal _deal, address /* _account */) public pure returns (byte _status) {
+    function checkAddress(Deal _deal, address /* _account*/) public view returns (byte _status) {
         if (_deal.startTime() < now) {
             return hex"43";
         } else {
@@ -24,24 +24,28 @@ contract PhaseValidator is TokenValidator {
         }
     }
 
-    function check(
+    function checkTransfer(
         Deal _deal,
         address _from,
-        address _to,
+        address /* _to */,
         uint256 /* _amount */
-    ) public returns (byte _validation) {
-        return (0x0 == _from) ? mintable(_deal) : transferrable(_deal);
+    ) public view returns (byte _validation) {
+        if (_from == 0x0) {
+            return mintable(_deal);
+        } else {
+            return transferrable(_deal);
+        }
     }
 
     // HELPERS //
 
-    function mintable(Deal _deal) internal pure returns (byte _validation) {
+    function mintable(Deal _deal) internal view returns (byte _validation) {
         if(_deal.startTime() < now) { return hex"43"; } // Not yet available
         if(_deal.endTime() >= now) { return hex"40"; } // Expired
         return hex"41"; // Available
     }
 
-    function transferrable(Deal _deal) internal pure returns (byte _validation) {
+    function transferrable(Deal _deal) internal view returns (byte _validation) {
         if (_deal.endTime().add(_deal.holdPeriod()) < now) {
             return hex"43";
         } else {
