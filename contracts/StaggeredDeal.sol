@@ -30,7 +30,12 @@ contract StaggeredDeal is Deal {
         uint256 createdAt;
     }
 
-    mapping(address => Minting[]) public mintings;
+    // Indexed from 1, blugh
+    uint public holderCount;
+    mapping(uint => address) private holderIndex;
+    mapping(address => uint) private reverseHolderIndex;
+
+    mapping(address => Minting[]) private mMintHistory;
 
     /* function StaggeredDeal( */
     /*     string _name, */
@@ -43,11 +48,28 @@ contract StaggeredDeal is Deal {
     /* ) Deal(_name, _symbol, _granularity, _holdPeriod, _validator) public {} */
 
     function mint(address _tokenHolder, uint256 _amount) public onlyOwner {
-        mintings[_tokenHolder].push(Minting({
+        super.mint(_tokenHolder, _amount);
+        recordMinting(_tokenHolder, _amount);
+    }
+
+    function mintHistory(address _holder) public returns (Minting[]) {
+        return mMintHistory[_holder];
+    }
+
+    function recordMinting(address _tokenHolder, uint256 _amount) internal onlyOwner {
+        upsertHolder(_tokenHolder);
+
+        mMintHistory[_tokenHolder].push(Minting({
             amount: _amount,
             createdAt: now
         }));
+    }
 
-        super.mint(_tokenHolder, _amount);
+    function upsertHolder(address _tokenHolder) internal onlyOwner {
+        if (reverseHolderIndex[_tokenHolder] == 0) {
+            holderCount++;
+            holderIndex[holderCount] = _tokenHolder;
+            reverseHolderIndex[_tokenHolder] = holderCount;
+        }
     }
 }

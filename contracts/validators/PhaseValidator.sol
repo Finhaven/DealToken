@@ -1,7 +1,7 @@
 pragma solidity ^0.4.19;
 
-import './TokenValidator.sol';
-import '../../node_modules/zeppelin-solidity/contracts/math/SafeMath.sol';
+import "../Deal.sol";
+import "../../node_modules/validated-token/contracts/TokenValidator.sol";
 
 /*
   Synchronous close validtor
@@ -17,7 +17,11 @@ contract PhaseValidator is TokenValidator {
     using SafeMath for uint256;
 
     function check(Deal _deal, address /* _account */) public pure returns (byte _status) {
-        return (_deal.startTime < now) ? hex"43" : hex"41";
+        if (_deal.startTime() < now) {
+            return hex"43";
+        } else {
+            return hex"41";
+        }
     }
 
     function check(
@@ -32,12 +36,16 @@ contract PhaseValidator is TokenValidator {
     // HELPERS //
 
     function mintable(Deal _deal) internal pure returns (byte _validation) {
-        if(_deal.startTime < now) { return hex"43"; } // Not yet available
-        if(_deal.endTime >= now) { return hex"40"; } // Expired
+        if(_deal.startTime() < now) { return hex"43"; } // Not yet available
+        if(_deal.endTime() >= now) { return hex"40"; } // Expired
         return hex"41"; // Available
     }
 
     function transferrable(Deal _deal) internal pure returns (byte _validation) {
-        return (_deal.endTime.add(_deal.holdPeriod) < now) ? hex"43" : hex"41";
+        if (_deal.endTime().add(_deal.holdPeriod()) < now) {
+            return hex"43";
+        } else {
+            return hex"41";
+        }
     }
 }

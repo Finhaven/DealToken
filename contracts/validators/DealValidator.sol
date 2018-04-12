@@ -1,11 +1,10 @@
 pragma solidity ^0.4.19;
 
-import './PhaseValidator.sol';
-import './TokenValidator.sol';
+import "../Deal.sol";
+import "./PhaseValidator.sol";
 
-/* import '../Deal.sol'; */
-
-import '../../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol';
+import "../../node_modules/validated-token/contracts/TokenValidator.sol";
+import "../../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol";
 
 /*
    Deal          DealValidator        PhaseValidator
@@ -52,7 +51,11 @@ contract DealValidator is Ownable, TokenValidator {
     // TOKEN VALIDATOR //
 
     function check(Deal _deal, address _account) public returns(byte _status) {
-        return auths[_account] ? phaseCheck(_deal, _account) : hex"10";
+        if (auths[_account]) {
+            return phaseCheck(_deal, _account);
+        } else {
+            return hex"10";
+        }
     }
 
     function check(
@@ -61,14 +64,23 @@ contract DealValidator is Ownable, TokenValidator {
         address _to,
         uint256 _amount
     ) public returns (byte _validation) {
-        return (auths[_from] && auths[_to]) ? hex"11" : hex"10";
+        if (auths[_from] && auths[_to]) {
+            return hex"11";
+        } else {
+            return hex"10";
+        }
     }
 
     // HELPERS //
 
     function phaseCheck(Deal _deal, address _tokenHolder) internal view returns (byte _validation) {
         byte phaseState = phaseValidator.check(_deal, _tokenHolder);
-        return isOk(phaseState) ? hex"11" : phaseState;
+
+        if (isOk(phaseState)) {
+            return hex"11";
+        } else {
+            return phaseState;
+        }
     }
 
     function isOk(byte status) internal view returns (bool) {
