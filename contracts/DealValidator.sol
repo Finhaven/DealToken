@@ -1,10 +1,8 @@
 pragma solidity ^0.4.19;
 
-import "../Deal.sol";
-import "./PhaseValidator.sol";
-
-import "../../node_modules/validated-token/contracts/TokenValidator.sol";
-import "../../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol";
+import "../node_modules/zeppelin-solidity/contracts/math/SafeMath.sol";
+import "../node_modules/validated-token/contracts/TokenValidator.sol";
+import "../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol";
 
 /*
    Deal          DealValidator        PhaseValidator
@@ -34,15 +32,12 @@ import "../../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol";
     |                 |                    |
     |                 |                    |
  */
-contract DealValidator is Ownable {
+contract DealValidator is Ownable, TokenValidator {
     using SafeMath for uint256;
 
-    PhaseValidator private phaseValidator;
     mapping(address => bool) private auths;
 
-    function DealValidator(PhaseValidator _phaseValidator) Ownable public {
-        phaseValidator = _phaseValidator;
-    }
+    function DealValidator() Ownable public {}
 
     function setAuth(address _address, bool _status) public onlyOwner {
         auths[_address] = _status;
@@ -50,40 +45,24 @@ contract DealValidator is Ownable {
 
     // TOKEN VALIDATOR //
 
-    function checkAddress(Deal _deal, address _account) public view returns(byte _status) {
+    function check(address /* _deal */, address _account) public returns(byte _status) {
         if (auths[_account]) {
-            return phaseCheck(_deal, _account);
+            return hex"11";
         } else {
             return hex"10";
         }
     }
 
-    function checkTransfer(
+    function check(
         address /* _token */,
         address _from,
         address _to,
         uint256 /* _amount */
-    ) public view returns (byte _validation) {
+    ) public returns (byte _validation) {
         if (auths[_from] && auths[_to]) {
             return hex"11";
         } else {
             return hex"10";
         }
-    }
-
-    // HELPERS //
-
-    function phaseCheck(Deal _deal, address _tokenHolder) internal view returns (byte _validation) {
-        byte phaseState = phaseValidator.checkAddress(_deal, _tokenHolder);
-
-        if (isOk(phaseState)) {
-            return hex"11";
-        } else {
-            return phaseState;
-        }
-    }
-
-    function isOk(byte status) internal pure returns (bool) {
-        return (status & hex"0F") == 1;
     }
 }
