@@ -1,8 +1,7 @@
-pragma solidity ^0.4.19;
+pragma solidity ^0.4.21;
 /* pragma experimental ABIEncoderV2; */
 
 import "./Deal.sol";
-import "../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol";
 
 /** Staggered close
 
@@ -26,7 +25,7 @@ Prehistory |  Mintable  |         Tradeable          | Inactive
            |            |                            |
 
  */
-contract StaggeredDeal is Deal, Ownable {
+contract StaggeredDeal is Deal {
     using SafeMath for uint256;
 
     struct Minting {

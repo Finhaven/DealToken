@@ -1,6 +1,6 @@
 pragma solidity ^0.4.21;
 
-import "../node_modules/validated-token/contracts/ReferenceToken.sol";
+import "validated-token/contracts/ReferenceToken.sol";
 
 contract Deal is ReferenceToken {
     using SafeMath for uint256;

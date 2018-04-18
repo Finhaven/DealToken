@@ -1,74 +1,22 @@
 const { assert } = require('chai');
 const web3 = require('web3');
 
-const utils = require('../node_modules/web3-server-tools/src/lib/contract-utils');
 const { accounts } = require('./accounts');
-
+const utils = require('../node_modules/web3-server-tools/src/lib/contract-utils');
+const OpenValidator = artifacts.require('OpenValidator.sol');
 const Deal = artifacts.require('./Deal'); // eslint-disable-line no-undef
-// const DealToken = artifacts.require('./DealToken'); // eslint-disable-line no-undef
 
 contract('Deal', () => { // eslint-disable-line no-undef
   let deal;
-  let dealToken;
-  let weiToTokenRate;
 
-  const createDeal = () => {
-    const dealOptions = utils.getDealParameters(accounts[5]);
-
-    const {
-      startTime,
-      endTime,
-      rate,
-      wallet,
-    } = dealOptions;
-
-    weiToTokenRate = rate;
-    return Deal.new("hi", "thar", 1, startTime, endTime, 400, wallet);
-  };
-
-  beforeEach(() => {
-    createDeal()
-      .then((s) => { deal = s; })
-      .then(address => Deal.at(address))
-      .then((token) => {
-        dealToken = token;
-      });
+  beforeEach(async () => {
+    const validator = SimpleAuthorization.new();
+    const dealAddr = await Deal.new("MyDeal", "MDL", 100, 0, 999999, 1000, validator);
+    deal = Deal.at(dealAddr);
   });
 
   it('should get instance of deal', () => {
     console.log('contract address', deal.address);
     assert.isNotNull(deal);
-  });
-
-  it('should allow investment in deal', () => {
-    const account = accounts[0];
-    const weiAmount = web3.utils.toWei('1', 'ether');
-
-    return Promise.all([deal.startTime(), deal.endTime()])
-      .then(([startTime, endTime]) => {
-        const now = Math.ceil(Date.now() / 1000);
-
-        // console.log(`Now: ${now}`);
-        // console.log(`Elapsed: ${now - startTime.toNumber()}`);
-        // console.log(`Left: ${endTime.toNumber() - now}`);
-        // console.log(`Contract start: ${startTime.toNumber()}`);
-        // console.log(`Contract end: ${endTime.toNumber()}`);
-
-        assert.isAtLeast(now, startTime.toNumber(), 'deal has started');
-        assert.isAtMost(now, endTime.toNumber(), 'deal has not finished');
-      })
-      .then(deal.authorize(account))
-      .then(() => {
-        const tx = { from: accounts[0], value: weiAmount };
-        console.log('sending transaction', tx);
-        return deal.sendTransaction(tx);
-      })
-      .then((/* sendResult */) =>
-        // console.log('send result', sendResult);
-        dealToken.balanceOf(accounts[0], { from: accounts[0] }))
-      .then((balance) => {
-        // console.log('balance of token after', balance.toNumber());
-        assert.equal(weiToTokenRate * weiAmount, balance.toNumber());
-      });
   });
 });

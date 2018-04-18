@@ -1,8 +1,8 @@
 pragma solidity ^0.4.21;
 
-import "../node_modules/zeppelin-solidity/contracts/math/SafeMath.sol";
-import "../node_modules/validated-token/contracts/TokenValidator.sol";
-import "../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol";
+import "zeppelin-solidity/contracts/math/SafeMath.sol";
+import "validated-token/contracts/TokenValidator.sol";
+import "zeppelin-solidity/contracts/ownership/Ownable.sol";
 
 /*
    Deal          DealValidator        PhaseValidator
@@ -39,13 +39,13 @@ contract DealValidator is Ownable, TokenValidator {
 
     function DealValidator() Ownable public {}
 
-    function setAuth(address _address, bool _status) public onlyOwner {
+    function setAuth(address _address, bool _status) external onlyOwner {
         auths[_address] = _status;
     }
 
     // TOKEN VALIDATOR //
 
-    function check(address /* _deal */, address _account) public returns(byte _status) {
+    function check(address /* _deal */, address _account) external returns(byte _status) {
         if (auths[_account]) {
             return hex"11";
         } else {
@@ -58,7 +58,7 @@ contract DealValidator is Ownable, TokenValidator {
         address _from,
         address _to,
         uint256 /* _amount */
-    ) public returns (byte _validation) {
+    ) external returns (byte _validation) {
         if (auths[_from] && auths[_to]) {
             return hex"11";
         } else {
