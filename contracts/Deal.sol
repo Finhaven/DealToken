@@ -20,8 +20,8 @@ contract Deal is ReferenceToken {
         uint256 _holdPeriod,
         TokenValidator _validator
     ) ReferenceToken(_name, _symbol, _granularity, _validator) public {
-        require(_startTime >= now);
         require(_startTime < _endTime);
+        require(_endTime >= now);
 
         holdPeriod = _holdPeriod;
         startTime  = _startTime;
