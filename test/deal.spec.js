@@ -16,8 +16,8 @@ contract('Deal', async () => { // eslint-disable-line no-undef
   const name = 'testDeal';
   const symbol = 'TDL';
   const granularity = 100;
-  const startTime = 1;
-  const endTime = 99999999999;
+  const mintStartTime = 1;
+  const mintEndTime = 99999999999;
   const holdPeriod = 10000;
 
   let deal = null;
@@ -30,8 +30,8 @@ contract('Deal', async () => { // eslint-disable-line no-undef
         name,
         symbol,
         granularity,
-        startTime,
-        endTime,
+        mintStartTime,
+        mintEndTime,
         holdPeriod,
         validatorAddress,
         ...params
@@ -49,19 +49,19 @@ contract('Deal', async () => { // eslint-disable-line no-undef
   describe('#Deal', async () => {
     describe('ends before now', async () => {
       it('fails to deploy', async () => {
-        await expectRevert(async () => await createDeal({endTime: startTime + 1}));
+        await expectRevert(async () => await createDeal({mintEndTime: mintStartTime + 1}));
       });
     });
 
     describe('ends as soon as it begins', async () => {
       it('fails to deploy', async () => {
-        await expectRevert(async () => await createDeal({endTime: startTime}));
+        await expectRevert(async () => await createDeal({mintEndTime: mintStartTime}));
       });
     });
 
     describe('ends before it begins', async () => {
       it('fails to deploy', async () => {
-        await expectRevert(async () => await createDeal({endTime: startTime - 1}));
+        await expectRevert(async () => await createDeal({mintEndTime: mintStartTime - 1}));
       });
     });
 
@@ -74,5 +74,9 @@ contract('Deal', async () => { // eslint-disable-line no-undef
     describe('valid params', () => {
       it('deploys successfully', () => expect(deal).to.not.be.null);
     });
+  });
+
+  describe('#mint',async () => {
+
   });
 });
