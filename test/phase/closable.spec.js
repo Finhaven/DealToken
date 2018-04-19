@@ -4,10 +4,10 @@ const { expectRevert, getNow } = require('../helpers');
 const Closable = artifacts.require('Closable'); // eslint-disable-line no-undef
 
 contract('Closable', () => { // eslint-disable-line no-undef
-  let closable;
+  let closesInFuture;
 
   before(async () => {
-    closable = await Closable.new(getNow() + 10000);
+    closesInFuture = await Closable.new(getNow() + 100000);
   });
 
   describe('#Closable', () => {
@@ -24,13 +24,30 @@ contract('Closable', () => { // eslint-disable-line no-undef
     });
 
     context('closes after created', () => {
-      it('fails to create', async () => {
-        const closed = await closable.isClosed();
-        expect(closed).to.be.false;
+      it('creates successfully', async () => {
+        const closed = await closesInFuture.isClosed();
+        return expect(closed).to.be.false;
       });
     });
   });
 
   describe('isClosed', () => {
+    context('already closed', () => {
+      it('is closed', async () => {
+        const closable = await Closable.new(getNow() + 1);
+
+        setTimeout(async () => {
+          const closed = await closable.isClosed();
+          return expect(closed).to.be.true;
+        }, 10);
+      });
+    });
+
+    context('not yet closed', () => {
+      it('is closed', async () => {
+        const closed = await closesInFuture.isClosed();
+        return expect(closed).to.be.false;
+      });
+    });
   });
 });
