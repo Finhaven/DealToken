@@ -16,28 +16,28 @@ contract('Deal', async () => { // eslint-disable-line no-undef
   const name = 'testDeal';
   const symbol = 'TDL';
   const granularity = 100;
-  const mintStartTime = 1;
-  const mintEndTime = 99999999999;
-  const holdPeriod = 10000;
 
+  let mintStartTime;
+  let holdStartTime;
+  let transferStartTime;
   let deal = null;
 
   const createDeal = async (params = {}) => {
     const {address: validatorAddress} = await OpenValidator.new();
+
+    const now = Number(new Date());
 
     const normalized =
       Object.values({
         name,
         symbol,
         granularity,
-        mintStartTime,
-        mintEndTime,
-        holdPeriod,
+        mintStartTime: now,
+        holdStartTime: now + 10000,
+        transferStartTime: now + 1000000,
         validatorAddress,
         ...params
       });
-
-    console.log(JSON.stringify(normalized));
 
     return await Deal.new(...normalized);
   };
@@ -49,19 +49,19 @@ contract('Deal', async () => { // eslint-disable-line no-undef
   describe('#Deal', async () => {
     describe('ends before now', async () => {
       it('fails to deploy', async () => {
-        await expectRevert(async () => await createDeal({mintEndTime: mintStartTime + 1}));
+        await expectRevert(async () => await createDeal({holdStartTime: mintStartTime + 1}));
       });
     });
 
     describe('ends as soon as it begins', async () => {
       it('fails to deploy', async () => {
-        await expectRevert(async () => await createDeal({mintEndTime: mintStartTime}));
+        await expectRevert(async () => await createDeal({holdStartTime: mintStartTime}));
       });
     });
 
     describe('ends before it begins', async () => {
       it('fails to deploy', async () => {
-        await expectRevert(async () => await createDeal({mintEndTime: mintStartTime - 1}));
+        await expectRevert(async () => await createDeal({holdStartTime: mintStartTime - 1}));
       });
     });
 

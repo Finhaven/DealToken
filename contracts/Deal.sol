@@ -4,14 +4,6 @@ import "validated-token/contracts/ReferenceToken.sol";
 import "./PhasedToken.sol";
 import "./Range.sol";
 
-/*
-  LIFECYCLE
-  =========
-
-  |-----------|--------------------|----------------|
-     Minting        Hold Period         Transfer
- */
-
 contract Deal is ReferenceToken, PhasedToken {
     using SafeMath for uint256;
 

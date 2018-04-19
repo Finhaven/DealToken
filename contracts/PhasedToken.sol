@@ -2,6 +2,14 @@ pragma solidity ^0.4.21;
 
 import "./Range.sol";
 
+/*
+  LIFECYCLE
+  =========
+
+  |-----------|--------------------|----------------|
+     Minting        Hold Period         Transfer
+*/
+
 contract PhasedToken {
     using Range for uint256;
 
