@@ -10,13 +10,21 @@ contract DealFactory {
         string _name,
         string _symbol,
         uint256 _granularity,
-        uint256 _startTime,
-        uint256 _endTime,
-        uint256 _holdPeriod,
+        uint256 _mintStartTime,
+        uint256 _holdStartTime,
+        uint256 _transferStartTime,
         TokenValidator _validator
     ) public returns (Deal _deal) {
         Deal deal =
-          new Deal(_name, _symbol, _granularity, _startTime, _endTime, _holdPeriod, _validator);
+          new Deal(
+              _name,
+              _symbol,
+              _granularity,
+              _mintStartTime,
+              _holdStartTime,
+              _transferStartTime,
+              _validator
+          );
 
         registry[msg.sender].push(deal);
         emit DealCreated(msg.sender, deal);
@@ -24,5 +32,7 @@ contract DealFactory {
         return deal;
     }
 
-    function mine() public view returns (Deal[]) { return registry[msg.sender]; }
+    function mine() public view returns (Deal[]) {
+        return registry[msg.sender];
+    }
 }
