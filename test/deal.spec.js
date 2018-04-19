@@ -1,26 +1,16 @@
 const { expect } = require('chai');
+const { expectRevert, getNow } = require('./helpers');
+
 const AlwaysValidator = artifacts.require('AlwaysValidator');
 const NeverValidator = artifacts.require('NeverValidator');
 const Deal = artifacts.require('Deal'); // eslint-disable-line no-undef
-
-const expectRevert = async (func) => {
-  try {
-    await func();
-    throw new Error('Should have failed');
-  } catch ({message}) {
-    expect(message).to.have.string('revert');
-  }
-};
-
-const getNow = () => Math.round((new Date()).getTime() / 1000);
 
 contract('Deal', (accounts) => { // eslint-disable-line no-undef
   const name = 'testDeal';
   const symbol = 'TDL';
   const granularity = 100;
 
-  const [account] = accounts;
-  const [to, from] = accounts;
+  const [account, to, from] = accounts;
   const amount = 2 * granularity;
 
   let mintStartTime;
