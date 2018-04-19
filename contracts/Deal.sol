@@ -1,14 +1,9 @@
 pragma solidity ^0.4.21;
 
 import "validated-token/contracts/ReferenceToken.sol";
-import "./PhasedToken.sol";
-import "./Range.sol";
+import "./Phase/PhasedToken.sol";
 
-contract Deal is ReferenceToken, PhasedToken {
-    using SafeMath for uint256;
-
-    TokenValidator private validator;
-
+contract Deal is PhasedToken, ReferenceToken {
     function Deal(
         string _name,
         string _symbol,
@@ -26,8 +21,11 @@ contract Deal is ReferenceToken, PhasedToken {
         return super.mint(_tokenHolder, _amount);
     }
 
-    function approve(address _spender, uint256 _amount) public returns (bool success) {
-        require(isTransferPhase());
-        return super.approve(_spender, _amount);
+    function canTransfer(
+        address _from,
+        address _to,
+        uint256 _amount
+    ) internal returns (bool) {
+        return (isTransferPhase() && super.canTransfer(_from, _to, _amount));
     }
 }

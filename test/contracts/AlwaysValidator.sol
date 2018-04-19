@@ -2,8 +2,8 @@ pragma solidity ^0.4.21;
 
 import "validated-token/contracts/TokenValidator.sol";
 
-contract OpenValidator is TokenValidator {
-  function OpenValidator() public {}
+contract AlwaysValidator is TokenValidator {
+  function AlwaysValidator() public {}
 
   function check(
       address /* token */,

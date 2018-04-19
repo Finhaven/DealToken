@@ -1,6 +1,6 @@
 pragma solidity ^0.4.21;
 
-import "./Range.sol";
+import "../Range.sol";
 
 /*
   LIFECYCLE
@@ -23,8 +23,8 @@ contract PhasedToken {
         uint256 _transferStartTime
     ) public {
         require(now <= _mintStartTime);
-        require(_mintStartTime < _holdStartTime);
-        require(_holdStartTime < _transferStartTime);
+        require(_mintStartTime <= _holdStartTime);
+        require(_holdStartTime <= _transferStartTime);
 
         mintStartTime  = _mintStartTime;
         holdStartTime  = _holdStartTime;

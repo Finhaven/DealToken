@@ -8,7 +8,7 @@ contract AdvancableToken is Ownable, PhasedToken {
         uint256 _mintStartTime,
         uint256 _holdStartTime,
         uint256 _transferStartTime
-    ) Ownable() PhasedToken(_mintStartTime, _holdStartTime, _transferStartTime) public {}
+    ) PhasedToken(_mintStartTime, _holdStartTime, _transferStartTime) public {}
 
     function startMintPhase() external onlyOwner {
         require(now < mintStartTime);
@@ -20,7 +20,7 @@ contract AdvancableToken is Ownable, PhasedToken {
         holdStartTime = now;
     }
 
-    function starTransferPhase() external onlyOwner {
+    function startTransferPhase() external onlyOwner {
         require(isHoldPhase());
         transferStartTime = now;
     }
