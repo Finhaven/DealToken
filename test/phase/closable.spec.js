@@ -39,7 +39,7 @@ contract('Closable', () => { // eslint-disable-line no-undef
         setTimeout(async () => {
           const closed = await closable.isClosed();
           return expect(closed).to.be.true;
-        }, 10);
+        }, 50);
       });
     });
 

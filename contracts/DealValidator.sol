@@ -45,7 +45,7 @@ contract DealValidator is Ownable, TokenValidator {
 
     // TOKEN VALIDATOR //
 
-    function check(address /* _deal */, address _account) external returns(byte _status) {
+    function check(address /* _deal */, address _account) external returns (byte _status) {
         if (auths[_account]) {
             return hex"11";
         } else {
