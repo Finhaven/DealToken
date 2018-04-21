@@ -28,10 +28,9 @@ contract('DealValidator', (accounts) => { // eslint-disable-line no-undef
 
   describe('#setAuth', () => {
     it('sets a user to valid', async () => {
-      console.log(`>>>>>>>>>>>> ${JSON.stringify(address)}`);
-      await extendedValidator.setAuth(address, true);
-      const result = await extendedValidator.check2(address, address);
-      console.log(`>>>>>>>>>>>> ${JSON.stringify(result)}`);
+      // const result = await extendedValidator.setAuth(to, true);
+      const result = await extendedValidator.check2(to, from);
+      console.log(`>>>>>>>>>>>> ${result}`);
       expect(result).to.equal('0x11');
     });
 

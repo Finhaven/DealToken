@@ -34,8 +34,8 @@ keys.push('(8) f6839e55e842fa6893f4d07219ae1886a751262063b01fd7b24595e8c2ea5034'
 keys.push('(9) 03f9560e3745f2036b6db24a9df3ec8544d729ef754bcdba6b1a08ebf6e5d022'.split(' ')[1]);
 
 // tack on the 0x
-keys = keys.map(k => `0x${k}`);
+keys = keys.map((k) => `0x${k}`);
 
 module.exports = {
-  accounts, keys,
+  accounts, keys
 };

@@ -3,7 +3,7 @@ pragma solidity ^0.4.21;
 import "../../contracts/DealValidator.sol";
 
 contract ExtendedDealValidator is DealValidator {
-    function ExtendedDealValidator() DealValidator public {}
+    constructor() DealValidator() public {}
 
     function check2(address _deal, address _account) external returns (byte) {
         return this.check(_deal, _account);

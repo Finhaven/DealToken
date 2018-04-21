@@ -3,7 +3,7 @@ pragma solidity ^0.4.21;
 import "validated-token/contracts/TokenValidator.sol";
 
 contract NeverValidator is TokenValidator {
-    function NeverValidator() public {}
+    constructor() public {}
 
     function check(
         address /* token */,

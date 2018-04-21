@@ -1,4 +1,5 @@
 const { expect } = require('chai');
+
 const RangeMock = artifacts.require('RangeMock'); // eslint-disable-line no-undef
 
 contract('Range', () => { // eslint-disable-line no-undef

@@ -18,8 +18,9 @@ contract('Closable', () => { // eslint-disable-line no-undef
     });
 
     context('closes when created', () => {
-      it('fails to create', async () => {
-        await expectRevert(async () => await Closable.new(getNow()));
+      it('create normally', async () => {
+        const closesNow = await Closable.new(getNow());
+        return expect(closesNow.address).to.be.a('string');
       });
     });
 

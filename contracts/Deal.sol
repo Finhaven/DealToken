@@ -4,7 +4,7 @@ import "validated-token/contracts/ReferenceToken.sol";
 import "./Phase/PhasedToken.sol";
 
 contract Deal is PhasedToken, ReferenceToken {
-    function Deal(
+    constructor(
         string _name,
         string _symbol,
         uint256 _granularity,

@@ -15,7 +15,7 @@
     "test:lint:fix": "eslint -c .eslintrc . --color=true --quiet --fix",
     "truffle:compile": "truffle compile",
     "truffle:migrate": "truffle migrate",
-    "start:testrpc": "ganache-cli -u 0 -s frontier-seed",
+    "start:testrpc": "ganache-cli -u 0 -s finhaven-seed",
     "watch": "npm-watch"
   },
   "watch": {

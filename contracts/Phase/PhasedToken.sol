@@ -17,7 +17,7 @@ contract PhasedToken {
     uint256 public holdStartTime;
     uint256 public transferStartTime;
 
-    function PhasedToken(
+    constructor(
         uint256 _mintStartTime,
         uint256 _holdStartTime,
         uint256 _transferStartTime

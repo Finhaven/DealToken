@@ -37,7 +37,7 @@ contract DealValidator is Ownable, TokenValidator {
 
     mapping(address => bool) private auths;
 
-    function DealValidator() Ownable public {}
+    constructor() Ownable() public {}
 
     function setAuth(address _address, bool _status) external onlyOwner {
         auths[_address] = _status;

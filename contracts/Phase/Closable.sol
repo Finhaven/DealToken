@@ -3,7 +3,7 @@ pragma solidity ^0.4.21;
 contract Closable {
     uint256 public closingTime;
 
-    function Closable(uint256 _closingTime) public {
+    constructor(uint256 _closingTime) public {
         require(_closingTime >= now);
         closingTime = _closingTime;
     }

@@ -4,7 +4,7 @@ import "zeppelin-solidity/contracts/ownership/Ownable.sol";
 import "./PhasedToken.sol";
 
 contract AdvancableToken is Ownable, PhasedToken {
-    function AdvancableToken(
+    constructor(
         uint256 _mintStartTime,
         uint256 _holdStartTime,
         uint256 _transferStartTime
