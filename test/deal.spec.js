@@ -1,8 +1,8 @@
 const { expect } = require('chai');
 const { expectRevert, getNow } = require('./helpers');
 
-const AlwaysValidator = artifacts.require('AlwaysValidator');
-const NeverValidator = artifacts.require('NeverValidator');
+const AlwaysValidator = artifacts.require('AlwaysValidator'); // eslint-disable-line no-undef
+const NeverValidator = artifacts.require('NeverValidator'); // eslint-disable-line no-undef
 const Deal = artifacts.require('Deal'); // eslint-disable-line no-undef
 
 contract('Deal', (accounts) => { // eslint-disable-line no-undef
@@ -38,11 +38,11 @@ contract('Deal', (accounts) => { // eslint-disable-line no-undef
         mintStartTime,
         holdStartTime,
         transferStartTime,
-        validatorAddress: null,
+        validatorAddress: account,
         ...params
       });
 
-    return await Deal.new(...normalized);
+    return Deal.new(...normalized);
   };
 
   before(async () => {
@@ -56,32 +56,38 @@ contract('Deal', (accounts) => { // eslint-disable-line no-undef
 
   describe('#Deal', () => {
     context('already ended', () => {
-      const holdStartTime = mintStartTime + 1;
+      holdStartTime = mintStartTime + 1;
 
-      it('fails to create', async () => {
-        await expectRevert(async () => await createDeal({ validatorAddress, holdStartTime }));
+      it('fails to create', () => {
+        expectRevert(() => {
+          createDeal({ validatorAddress, holdStartTime });
+        });
       });
     });
 
     context('ends as soon as it begins', () => {
-      const holdStartTime = mintStartTime;
+      holdStartTime = mintStartTime;
 
-      it('fails to create', async () => {
-        await expectRevert(async () => await createDeal({ validatorAddress, holdStartTime }));
+      it('fails to create', () => {
+        expectRevert(() => {
+          createDeal({ validatorAddress, holdStartTime });
+        });
       });
     });
 
     context('ends before it begins', () => {
-      const holdStartTime = mintStartTime - 1;
-
-      it('fails to create', async () => {
-        await expectRevert(async () => await createDeal({ validatorAddress, holdStartTime }));
+      it('fails to create', () => {
+        expectRevert(() => {
+          createDeal({ validatorAddress, holdStartTime: mintStartTime - 1 });
+        });
       });
     });
 
     context('zero granularity', () => {
-      it('fails to create', async () => {
-        await expectRevert(async () => await createDeal({ validatorAddress, granularity: 0 }));
+      it('fails to create', () => {
+        expectRevert(() => {
+          createDeal({ validatorAddress, granularity: 0 });
+        });
       });
     });
 
@@ -93,11 +99,11 @@ contract('Deal', (accounts) => { // eslint-disable-line no-undef
   describe('#mint', () => {
     context('during minting period', () => {
       let initialBalance = 0;
-      let initialSupply = 0;
+      // let initialSupply = 0;
 
       beforeEach(async () => {
         initialBalance = Number(await deal.balanceOf(account));
-        initialSupply = Number(await deal.totalSupply());
+        // initialSupply = Number(await deal.totalSupply());
         await deal.mint(account, amount);
       });
 
@@ -115,20 +121,20 @@ contract('Deal', (accounts) => { // eslint-disable-line no-undef
     context('before minting period', () => {
       it('prevents minting (revert)', async () => {
         const earlyDeal = await createDeal({ validatorAddress, mintStartTime: getNow() + 10000 });
-        await expectRevert(async () => await earlyDeal.mint(account, amount));
+        expectRevert(() => earlyDeal.mint(account, amount));
       });
     });
 
     context('after minting period', () => {
       it('prevents minting (revert)', async () => {
         const lateDeal = await createDeal({ validatorAddress, holdStartTime: getNow() });
-        await expectRevert(async () => await lateDeal.mint(account, amount));
+        expectRevert(() => lateDeal.mint(account, amount));
       });
     });
 
     context('user fails validation', () => {
-      it('prevents minting (revert)', async () => {
-        await expectRevert(async () => await neverDeal.mint(account, amount));
+      it('prevents minting (revert)', () => {
+        expectRevert(() => neverDeal.mint(account, amount));
       });
     });
   });
@@ -158,14 +164,14 @@ contract('Deal', (accounts) => { // eslint-disable-line no-undef
     // });
 
     context('not during transfer phase', () => {
-      it('does not allow transfer', async () => {
-        await expectRevert(async () => await deal.transferFrom(to, from, amount));
+      it('does not allow transfer', () => {
+        expectRevert(() => deal.transferFrom(to, from, amount));
       });
     });
 
     context('fails validation', () => {
-      it('reverts', async () => {
-        await expectRevert(async () => await neverDeal.transferFrom(to, from, amount));
+      it('reverts', () => {
+        expectRevert(() => neverDeal.transferFrom(to, from, amount));
       });
     });
   });

@@ -5,7 +5,7 @@ import "../../contracts/DealValidator.sol";
 contract ExtendedDealValidator is DealValidator {
     constructor() DealValidator() public {}
 
-    function check2(address _deal, address _account) external returns (byte) {
+    function check2(address _deal, address _account) external returns (byte _result) {
         return this.check(_deal, _account);
     }
 

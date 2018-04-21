@@ -12,8 +12,10 @@ contract('Closable', () => { // eslint-disable-line no-undef
 
   describe('#Closable', () => {
     context('closes before created', () => {
-      it('fails to create', async () => {
-        await expectRevert(async () => await Closable.new(1));
+      it('fails to create', () => {
+        expectRevert(async () => {
+          await Closable.new(1);
+        });
       });
     });
 

@@ -35,7 +35,7 @@ import "zeppelin-solidity/contracts/ownership/Ownable.sol";
 contract DealValidator is Ownable, TokenValidator {
     using SafeMath for uint256;
 
-    mapping(address => bool) private auths;
+    mapping(address => bool) internal auths;
 
     constructor() Ownable() public {}
 

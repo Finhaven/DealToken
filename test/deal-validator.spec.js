@@ -1,11 +1,10 @@
 const { expect } = require('chai');
-const { expectRevert, getNow } = require('./helpers');
 
 const DealValidator = artifacts.require('DealValidator'); // eslint-disable-line no-undef
 const ExtendedDealValidator = artifacts.require('ExtendedDealValidator'); // eslint-disable-line no-undef
 
 contract('DealValidator', (accounts) => { // eslint-disable-line no-undef
-  const [address, to, from] = accounts;
+  const [address, to] = accounts;
 
   let validator;
   let extendedValidator;
@@ -13,13 +12,10 @@ contract('DealValidator', (accounts) => { // eslint-disable-line no-undef
   before(async () => {
     validator = await DealValidator.new();
     extendedValidator = await ExtendedDealValidator.new();
+    await extendedValidator.setAuth(address, true);
   });
 
   describe('#DealValidator', () => {
-    it('can be instantiated', () => {
-      expect(async () => await DealValidator.new()).to.not.throw();
-    });
-
     it('has an owner', async () => {
       const owner = await validator.owner();
       expect(owner).to.match(/^0x[a-z0-9]+/);
@@ -28,20 +24,17 @@ contract('DealValidator', (accounts) => { // eslint-disable-line no-undef
 
   describe('#setAuth', () => {
     it('sets a user to valid', async () => {
-      // const result = await extendedValidator.setAuth(to, true);
-      const result = await extendedValidator.check2(to, from);
-      console.log(`>>>>>>>>>>>> ${result}`);
+      const result = await extendedValidator.check2.call('0x0', address);
       expect(result).to.equal('0x11');
     });
 
-    // it('sets a user to invalid', async () => {
-    //   await extendedValidator.setAuth(address, false);
-    //   const result = await extendedValidator.check2(0x0, address);
-    //   expect(String(result)).to.equal('0x10');
-    // });
+    it('sets a user to invalid', async () => {
+      const result = await extendedValidator.check2.call('0x0', to);
+      expect(String(result)).to.equal('0x10');
+    });
   });
 
-  describe('token validation', () => {
+  // describe('token validation', () => {
 
-  });
+  // });
 });
