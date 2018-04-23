@@ -17,6 +17,13 @@ contract PhasedToken {
     uint256 public holdStartTime;
     uint256 public transferStartTime;
 
+    enum Phase {
+        Before,
+        Mint,
+        Hold,
+        Transfer
+    }
+
     constructor(
         uint256 _mintStartTime,
         uint256 _holdStartTime,
@@ -45,5 +52,13 @@ contract PhasedToken {
 
     function isTransferPhase() public view returns (bool) {
         return now >= transferStartTime;
+    }
+
+    function phase() public view returns (Phase) {
+        if (isBeforeMintPhase()) { return Phase.Before; }
+        if (isMintPhase()) { return Phase.Mint; }
+        if (isHoldPhase()) { return Phase.Hold; }
+        if (isTransferPhase()) { return Phase.Transfer; }
+        revert("Token is in unknown phase");
     }
 }

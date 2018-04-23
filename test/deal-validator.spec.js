@@ -15,24 +15,24 @@ contract('DealValidator', (accounts) => { // eslint-disable-line no-undef
     await extendedValidator.setAuth(address, true);
   });
 
-  describe('#DealValidator', () => {
-    it('has an owner', async () => {
-      const owner = await validator.owner();
-      expect(owner).to.match(/^0x[a-z0-9]+/);
-    });
-  });
+  // describe('#DealValidator', () => {
+  //   it('has an owner', async () => {
+  //     const owner = await validator.owner();
+  //     expect(owner).to.match(/^0x[a-z0-9]+/);
+  //   });
+  // });
 
-  describe('#setAuth', () => {
-    it('sets a user to valid', async () => {
-      const result = await extendedValidator.check2.call('0x0', address);
-      expect(result).to.equal('0x11');
-    });
+  // describe('#setAuth', () => {
+  //   it('sets a user to valid', async () => {
+  //     const result = await extendedValidator.check2.call('0x0', address);
+  //     expect(result).to.equal('0x11');
+  //   });
 
-    it('sets a user to invalid', async () => {
-      const result = await extendedValidator.check2.call('0x0', to);
-      expect(String(result)).to.equal('0x10');
-    });
-  });
+  //   it('sets a user to invalid', async () => {
+  //     const result = await extendedValidator.check2.call('0x0', to);
+  //     expect(String(result)).to.equal('0x10');
+  //   });
+  // });
 
   // describe('token validation', () => {
 
