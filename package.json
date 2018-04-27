@@ -36,6 +36,7 @@
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.9.0",
     "ganache-cli": "^6.1.0",
+    "hoek": "^5.0.3",
     "mocha": "^5.0.5",
     "npm-watch": "^0.3.0",
     "solhint": "^1.1.10",
@@ -48,7 +49,7 @@
   },
   "dependencies": {
     "ethereumjs-tx": "^1.3.4",
-    "solc": "^0.4.21",
+    "solc": "^0.4.23",
     "web3": "^1.0.0-beta.33",
     "web3-server-tools": "git+https://github.com/Finhaven/web3-server-tools.git"
   }
