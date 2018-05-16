@@ -1,38 +1,31 @@
-pragma solidity ^0.4.15;
+pragma solidity ^0.4.21;
 
+import "validated-token/contracts/ReferenceToken.sol";
+import "./Phase/PhasedToken.sol";
 
-import '../node_modules/zeppelin-solidity/contracts/crowdsale/Crowdsale.sol';
-import './TxOwnable.sol';
-import './DealToken.sol';
+contract Deal is PhasedToken, ReferenceToken {
+    constructor(
+        string _name,
+        string _symbol,
+        uint256 _granularity,
+        uint256 _mintStartTime,
+        uint256 _holdStartTime,
+        uint256 _transferStartTime,
+        TokenValidator _validator
+    ) ReferenceToken(_name, _symbol, _granularity, _validator)
+      PhasedToken(_mintStartTime, _holdStartTime, _transferStartTime)
+      public {}
 
+    function mint(address _tokenHolder, uint256 _amount) public onlyOwner {
+        require(isMintPhase());
+        return super.mint(_tokenHolder, _amount);
+    }
 
-contract Deal is Crowdsale, TxOwnable {
-
-  DealToken dealToken;
-  mapping (address => bool) authorized;
-  event Authorizing(address sender, address investor);
-
-  function Deal(uint256 _startTime, uint256 _endTime, uint256 _rate, address _wallet)
-   Crowdsale(_startTime, _endTime, _rate, _wallet) TxOwnable {
-  }
-
-  // creates the token to be sold.
-  // override this method to have crowdsale of a specific MintableToken token.
-  function createTokenContract() internal returns (MintableToken) {
-//    address dealAddress = address(this);
-//    DealToken(dealAddress, address(token));
-    dealToken = new DealToken();
-    return dealToken;
-  }
-
-  function authorize(address investor) onlyOwner public {
-    Authorizing(msg.sender,investor);
-    dealToken.authorizeAddress(investor,true);
-    authorized[investor] = true;
-  }
-
-
-  function buyTokens(address beneficiary) public payable {
-    return super.buyTokens(beneficiary);
-  }
+    function canTransfer(
+        address _from,
+        address _to,
+        uint256 _amount
+    ) internal returns (bool) {
+        return (isTransferPhase() && super.canTransfer(_from, _to, _amount));
+    }
 }

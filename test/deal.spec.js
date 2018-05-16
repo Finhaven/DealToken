@@ -1,84 +1,182 @@
-const { assert } = require('chai');
-const web3 = require('web3');
+const { expect } = require('chai');
+const { expectRevert, getNow } = require('./helpers');
 
-const utils = require('../node_modules/web3-server-tools/src/lib/contract-utils');
-const { accounts } = require('./accounts');
+const AlwaysValidator = artifacts.require('AlwaysValidator'); // eslint-disable-line no-undef
+const NeverValidator = artifacts.require('NeverValidator'); // eslint-disable-line no-undef
+const Deal = artifacts.require('Deal'); // eslint-disable-line no-undef
 
-const Deal = artifacts.require('./Deal'); // eslint-disable-line no-undef
-const DealToken = artifacts.require('./DealToken'); // eslint-disable-line no-undef
+contract('Deal', (accounts) => { // eslint-disable-line no-undef
+  const name = 'testDeal';
+  const symbol = 'TDL';
+  const granularity = 100;
 
-contract('Deal', () => { // eslint-disable-line no-undef
-  let deal;
-  let dealToken;
-  let weiToTokenRate;
+  const [account, to, from] = accounts;
+  const amount = 2 * granularity;
 
-  const createDeal = () => {
-    const dealOptions = utils.getDealParameters(accounts[5]);
-    const {
-      startTime,
-      endTime,
-      rate,
-      wallet,
-    } = dealOptions;
+  let mintStartTime;
+  let holdStartTime;
+  let transferStartTime;
 
-    weiToTokenRate = rate;
-    return Deal.new(startTime, endTime, rate, wallet);
+  let alwaysValidator;
+  let neverValidator;
+  let validatorAddress;
+
+  let deal = null;
+  let neverDeal;
+
+  const createDeal = async (params = {}) => {
+    const now = getNow();
+    mintStartTime = now;
+    holdStartTime = now + 100000;
+    transferStartTime = now + 999999999;
+
+    const normalized =
+      Object.values({
+        name,
+        symbol,
+        granularity,
+        mintStartTime,
+        holdStartTime,
+        transferStartTime,
+        validatorAddress: account,
+        ...params
+      });
+
+    return Deal.new(...normalized);
   };
 
-  beforeEach(() => createDeal()
-    .then((s) => { deal = s; })
-    .then(() => deal.token())
-    .then(address => DealToken.at(address))
-    .then((token) => {
-      dealToken = token;
-    }));
+  before(async () => {
+    alwaysValidator = await AlwaysValidator.new();
+    validatorAddress = alwaysValidator.address;
+    deal = await createDeal({ validatorAddress });
 
-  it('should get instance of deal', () => {
-    console.log('contract address', deal.address);
-    assert.isNotNull(deal);
+    neverValidator = await NeverValidator.new();
+    neverDeal = await createDeal({ validatorAddress: neverValidator.address });
   });
 
-  it('should get token from deal', () => Promise.resolve(deal.token())
-    .then(async (token) => {
-      console.log('token address', token);
-      dealToken = await DealToken.at(token);
-      // console.log('dealToken', dealToken);
-      return dealToken.balanceOf.call(accounts[0], { from: accounts[0] });
-    })
-    .then((balance) => {
-      console.log('balance of token', balance.toNumber());
-      assert.equal(0, balance.toNumber());
-    }));
+  describe('#Deal', () => {
+    // context('already ended', () => {
+    //   holdStartTime = mintStartTime + 1;
 
-  it('should allow investment in deal', () => {
-    const account = accounts[0];
-    const weiAmount = web3.utils.toWei('1', 'ether');
+    //   it('fails to create', () => {
+    //     expectRevert(() => {
+    //       createDeal({ validatorAddress, holdStartTime });
+    //     });
+    //   });
+    // });
 
-    return Promise.all([deal.startTime(), deal.endTime()])
-      .then(([startTime, endTime]) => {
-        const now = Math.ceil(Date.now() / 1000);
+    // context('ends as soon as it begins', () => {
+    //   holdStartTime = mintStartTime;
 
-        // console.log(`Now: ${now}`);
-        // console.log(`Elapsed: ${now - startTime.toNumber()}`);
-        // console.log(`Left: ${endTime.toNumber() - now}`);
-        // console.log(`Contract start: ${startTime.toNumber()}`);
-        // console.log(`Contract end: ${endTime.toNumber()}`);
+    //   it('fails to create', () => {
+    //     expectRevert(() => {
+    //       createDeal({ validatorAddress, holdStartTime });
+    //     });
+    //   });
+    // });
 
-        assert.isAtLeast(now, startTime.toNumber(), 'deal has started');
-        assert.isAtMost(now, endTime.toNumber(), 'deal has not finished');
-      })
-      .then(deal.authorize(account))
-      .then(() => {
-        const tx = { from: accounts[0], value: weiAmount };
-        console.log('sending transaction', tx);
-        return deal.sendTransaction(tx);
-      })
-      .then((/* sendResult */) =>
-        // console.log('send result', sendResult);
-        dealToken.balanceOf(accounts[0], { from: accounts[0] }))
-      .then((balance) => {
-        // console.log('balance of token after', balance.toNumber());
-        assert.equal(weiToTokenRate * weiAmount, balance.toNumber());
-      });
+    // context('ends before it begins', () => {
+    //   it('fails to create', () => {
+    //     expectRevert(() => {
+    //       createDeal({ validatorAddress, holdStartTime: mintStartTime - 1 });
+    //     });
+    //   });
+    // });
+
+    // context('zero granularity', () => {
+    //   it('fails to create', () => {
+    //     expectRevert(() => {
+    //       createDeal({ validatorAddress, granularity: 0 });
+    //     });
+    //   });
+    // });
+
+    // context('valid params', () => {
+    //   it('deploys successfully', () => expect(deal).to.not.be.null);
+    // });
+  });
+
+  describe('#mint', () => {
+    // context('during minting period', () => {
+    //   let initialBalance = 0;
+    //   // let initialSupply = 0;
+
+    //   beforeEach(async () => {
+    //     initialBalance = Number(await deal.balanceOf(account));
+    //     // initialSupply = Number(await deal.totalSupply());
+    //     await deal.mint(account, amount);
+    //   });
+
+    //   it(`increases the total supply by ${amount}`, async () => {
+    //     const newTotal = await deal.totalSupply();
+    //     expect(Number(newTotal)).to.equal(initialBalance + amount);
+    //   });
+
+    //   it(`increases the target user's balance by ${amount}`, async () => {
+    //     const newBalance = await deal.balanceOf(account);
+    //     expect(Number(newBalance)).to.equal(initialBalance + amount);
+    //   });
+    // });
+
+    // context('before minting period', () => {
+    //   it('prevents minting (revert)', async () => {
+    //     const earlyDeal = await createDeal({ validatorAddress, mintStartTime: getNow() + 10000 });
+    //     expectRevert(() => earlyDeal.mint(account, amount));
+    //   });
+    // });
+
+    // context('after minting period', () => {
+    //   it('prevents minting (revert)', async () => {
+    //     const lateDeal = await createDeal({ validatorAddress, holdStartTime: getNow() });
+    //     expectRevert(() => lateDeal.mint(account, amount));
+    //   });
+    // });
+
+    // context('user fails validation', () => {
+    //   it('prevents minting (revert)', () => {
+    //     expectRevert(() => neverDeal.mint(account, amount));
+    //   });
+    // });
+  });
+
+  describe('#transfer', () => {
+    // context('during transfer phase', () => {
+    //   let transferDeal;
+
+    //   beforeEach(async() => {
+    //     const now = getNow();
+
+    //     transferDeal = await createDeal({
+    //       validatorAddress: alwaysValidator.address,
+    //       mintStartTime: now - 10000,
+    //       holdStartTime: now - 100,
+    //       transferStartTime: now - 10
+    //     });
+
+    //     await transferDeal.mint(from, amount);
+    //     await transferDeal.transferFrom(from, to, amount);
+    //   });
+
+    //   it('transfers successfully', async () => {
+    //     const balance = await transferDeal.balanceOf(to);
+    //     expect(Number(balance)).to.equal(amount);
+    //   });
+    // });
+
+    // context('not during transfer phase', () => {
+    //   it('does not allow transfer', () => {
+    //     expectRevert(async () => {
+    //       await deal.transferFrom(to, from, amount);
+    //     });
+    //   });
+    // });
+
+    // context('fails validation', () => {
+    //   it('reverts', () => {
+    //     expectRevert(async () => {
+    //       await neverDeal.transferFrom(to, from, amount);
+    //     });
+    //   });
+    // });
   });
 });
